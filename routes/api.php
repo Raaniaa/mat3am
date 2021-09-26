@@ -22,3 +22,8 @@ Route::post('register',[authController::class,'register']);
 Route::post('login',[authController::class,'login']);
 
 Route::post('uploadsImage',[uploadController::class,'uploadsImage']);
+Route::post('postCategory',[uploadController::class,'postCategory']);
+Route::post('postProduct',[uploadController::class,'postProduct']);
+Route::get('idProduct',[uploadController::class,'idProduct']);
+Route::get('foodMenu',[uploadController::class,'foodMenu']);
+Route::get('suggestMenu',[uploadController::class,'suggestMenu']);

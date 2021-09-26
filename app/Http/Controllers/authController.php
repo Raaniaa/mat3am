@@ -24,7 +24,6 @@ class authController extends Controller
             'status' => false,
         ]);
         }
-       // $request['email_verification_token'] = Str::random(32);
         $request['password']=Hash::make($request['password']);
         $details = User::create([
          'name' => $request->name,
@@ -34,12 +33,6 @@ class authController extends Controller
          'city' => $request->city,
         ]);
          $token = $details->createToken('auth_token')->plainTextToken;
-        // $verifyUser = VerifyUser::create([
-        //  'user_id' => $details->id,
-        //  'token' => mt_rand(100000, 999999),
-        // ]);
-        $user = User::where('id',$details->id)->select('id')->first();
-       // \Mail::to($details->email)->send(new MyTestMail($details));
         return response()->json([
          'message' => "User registered successfully",
          'status' => true,
@@ -53,26 +46,37 @@ class authController extends Controller
             ]);
             if ($loginData->fails())
             {
-             return response(['errors'=>$loginData->errors()->all()], 422);
+                return response([
+                    'message'=>$validator->messages()->first(),
+                    'status' => false,
+                    'data' => '',
+                    'access_token' => '',
+                ]);
             }
          $user = User::where('phone', $request['phone'])->first();
          if($user){
              //if($user->verified == 0){
                  if (!auth()->attempt($request->only('phone','password'))) {
-                   return response(['message' => 'Wrong Password'], 401);
-                 //}
+                   return response([
+                    'data' => '',
+                    'message' => 'Wrong Password',
+                    'status' => false,
+                    'access_token' => '',
+                ]);
              }
-            //  if($user->verified != 0){
-            //      if (!auth()->attempt($loginData)) {
-            //          return response(['message' => 'Wrong Password'], 401);
-            //      } 
                  $accessToken = auth()->user()->createToken('auth_token')->plainTextToken;
-                 return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-             //}
-            //$accessToken = auth()->user()->createToken('auth_token')->plainTextToken;
-            //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-            //return response(['message' => 'account not verify'], 400); 
+                 return response([
+                    'data' => auth()->user(),
+                    'access_token' => $accessToken,
+                    'message' => 'success',
+                    'status' => false,
+                 ]);
          }
-         return response(['message' => 'phone Wrong please register'], 404); 
+         return response([
+            'data' => '',
+            'message' => 'phone Wrong please register',
+            'status' => false,
+            'access_token' => '',
+        ]); 
      }
 }
