@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\uploadController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,3 +20,5 @@ use App\Http\Controllers\authController;
 // });
 Route::post('register',[authController::class,'register']);
 Route::post('login',[authController::class,'login']);
+
+Route::post('uploadsImage',[uploadController::class,'uploadsImage']);
