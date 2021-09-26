@@ -19,7 +19,10 @@ class authController extends Controller
          'phone' => 'required|max:255',
         ]);
         if ($validator->fails()){
-         return response(['errors'=>$validator->errors()->all()], 422);
+         return response([
+            'message'=>$validator->messages()->all(),
+            'status' => false,
+        ]);
         }
        // $request['email_verification_token'] = Str::random(32);
         $request['password']=Hash::make($request['password']);
@@ -39,8 +42,7 @@ class authController extends Controller
        // \Mail::to($details->email)->send(new MyTestMail($details));
         return response()->json([
          'message' => "User registered successfully",
-         'access_token' => $token,
-         'data' => $details,
+         'status' => true,
         ]);
      }
      //function login
