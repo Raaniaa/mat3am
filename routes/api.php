@@ -26,4 +26,7 @@ Route::post('postCategory',[uploadController::class,'postCategory']);
 Route::post('postProduct',[uploadController::class,'postProduct']);
 Route::get('idProduct',[uploadController::class,'idProduct']);
 Route::get('foodMenu',[uploadController::class,'foodMenu']);
-Route::get('suggestMenu',[uploadController::class,'suggestMenu']);
+// Route::get('suggestMenu',[uploadController::class,'suggestMenu']);
+
+
+Route::get('categoryProducts',[uploadController::class,'categoryProducts']);

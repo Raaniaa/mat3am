@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Products;
 use App\Models\Category;
+use App\Models\Banner;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 class uploadController extends Controller
@@ -99,11 +100,15 @@ class uploadController extends Controller
     
     }
     public function foodMenu(){
-        $menu = Products::take(3)->cont();
-        if($manu){
+        $menu = Products::take(3)->count();
+        if($menu){
+            $banner = Banner::get();
+            $category = Category::get();
             $menu = Products::take(3)->get();
+            $sug = Products::take(7)->get();
+            $special = Products::take(7)->get();
             return response([
-                'data' => $menu,
+                'data' =>$banner,$category,$menu,$sug,$special,
                 'message'=>'success',
                 'status' => true,
             ]); 
@@ -114,21 +119,35 @@ class uploadController extends Controller
             'status' => false,
         ]); 
     }
-    public function suggestMenu(){
-        $menu = Products::take(7)->cont();
-        if($manu){
-            $menu = Products::take(7)->get();
-            return response([
-                'data' => $menu,
-                'message'=>'success',
-                'status' => true,
-            ]); 
-        }
-        return response([
-            'data' => '',
-            'message'=>'faild',
-            'status' => false,
-        ]); 
+    // public function suggestMenu(){
+    //     $menu = Products::take(7)->cont();
+    //     if($manu){
+    //         $menu = Products::take(7)->get();
+    //         return response([
+    //             'data' => $menu,
+    //             'message'=>'success',
+    //             'status' => true,
+    //         ]); 
+    //     }
+    //     return response([
+    //         'data' => '',
+    //         'message'=>'faild',
+    //         'status' => false,
+    //     ]); 
+    // }
+    public function categoryProducts(Request $request){
+        $category = Category::where('id',$request->id)->first();
+        if($category){
+            $product = Category::where('id',$request->id)->has('products')->with('products')->count();
+            if($product){
+            return response()->json([
+                'message' => 'success',
+               'data' => $product,
+            ],200);
+        }}
+        return response()->json([
+          'message' => 'faild',
+        ],404);
     }
 
  } 
