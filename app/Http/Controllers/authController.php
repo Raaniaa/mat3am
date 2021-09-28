@@ -40,6 +40,7 @@ class authController extends Controller
      }
      //function login
      public function login(Request $request){
+         
          $loginData = Validator::make($request->all(), [
              'phone' => 'required|max:255',
              'password' => 'required|min:3',
@@ -51,9 +52,10 @@ class authController extends Controller
                     'status' => false,
                     'data' => '',
                     'access_token' => '',
-                ]);
+                ],401);
             }
          $user = User::where('phone', $request['phone'])->first();
+         
          if($user){
              //if($user->verified == 0){
                  if (!auth()->attempt($request->only('phone','password'))) {
@@ -62,21 +64,21 @@ class authController extends Controller
                     'message' => 'Wrong Password',
                     'status' => false,
                     'access_token' => '',
-                ]);
+                ],401);
              }
                  $accessToken = auth()->user()->createToken('auth_token')->plainTextToken;
                  return response([
                     'data' => auth()->user(),
                     'access_token' => $accessToken,
                     'message' => 'success',
-                    'status' => false,
-                 ]);
+                    'status' => true,
+                 ],200);
          }
          return response([
             'data' => '',
             'message' => 'phone Wrong please register',
             'status' => false,
             'access_token' => '',
-        ]); 
+        ],401); 
      }
 }
