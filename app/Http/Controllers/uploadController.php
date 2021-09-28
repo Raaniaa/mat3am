@@ -130,6 +130,19 @@ class uploadController extends Controller
             'status' => false,
         ]); 
     }
+    public function categoryProducts(Request $request){
+        $category = Category::where('id',$request->id)->first();
+        if($category){
+            $product = Category::where('id',$request->id)->with('products')->get();
+            return response()->json([
+                'message' => 'success',
+               'data' => $product,
+            ]);
+        }
+        return response()->json([
+          'message' => 'faild',
+        ]);
+    }
 
  } 
 
